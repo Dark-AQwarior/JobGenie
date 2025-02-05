@@ -21,20 +21,20 @@ jobs:
       - name: 📦 Install Dependencies (Ensure jobspy is Installed)
         run: |
           echo "🔍 Checking Python Version..."
-          python --version
+          python3 --version
 
           echo "📦 Installing dependencies..."
-          pip install --upgrade pip
-          pip install jobspy pandas  # ✅ Explicitly install jobspy
+          python3 -m pip install --upgrade pip
+          python3 -m pip install jobspy pandas  # ✅ Explicitly install jobspy
 
           if [ -f requirements.txt ]; then
-            pip install -r requirements.txt
+            python3 -m pip install -r requirements.txt
           else
             echo "⚠️ No requirements.txt found, skipping installation."
           fi
 
           echo "📜 Installed Packages:"
-          pip list  # ✅ Debugging step to verify installed packages
+          python3 -m pip list  # ✅ Debugging step to verify installed packages
 
       - name: 🚀 Run Job Genie Script
         env:
@@ -43,8 +43,10 @@ jobs:
           RECIPIENT_EMAIL: ${{ secrets.RECIPIENT_EMAIL }}
         run: |
           echo "🏁 Running jobgenie.py..."
-          python -m jobspy scrape_jobs || echo "⚠️ JobSpy import failed"
-          python jobgenie.py || echo "⚠️ Script failed, capturing logs..."
+          python3 -m pip install --upgrade pip  # ✅ Ensure correct pip
+          python3 -m pip install jobspy  # ✅ Force reinstall jobspy to correct path
+          python3 -m jobspy --help  # ✅ Verify if jobspy is installed
+          python3 jobgenie.py || echo "⚠️ Script failed, capturing logs..."
           echo "✅ Job completed successfully!"
 
       - name: 📤 Upload Logs if Script Fails
