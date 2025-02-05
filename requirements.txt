@@ -1,6 +1,8 @@
 jobspy
 pandas
-logging
 selenium
 webdriver-manager
 undetected-chromedriver
+python-dotenv
+requests
+redis

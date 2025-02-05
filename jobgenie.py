@@ -1,18 +1,19 @@
 import sys
 import os
 
+# ✅ Force Python to use the correct virtual environment
+venv_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "venv/lib/python3.9/site-packages"))
+sys.path.insert(0, venv_path)
+
 # Debugging: Print Python Path
 print(f"🐍 Python Executable Path: {sys.executable}")
 print(f"📜 Python Version: {sys.version}")
-
-# Ensure the correct Python environment is used
-sys.path.append(os.path.dirname(sys.executable))
 
 # Debugging: Print sys.path to check module search paths
 print("🔍 Python sys.path:")
 print("\n".join(sys.path))
 
-# Try importing jobspy and print an error if it fails
+# Try importing jobspy
 try:
     from jobspy import scrape_jobs
     print("✅ jobspy imported successfully!")

@@ -37,22 +37,9 @@ jobs:
           echo "📜 Installed Packages:"
           python3 -m pip list  # ✅ Debugging step to verify installed packages
 
-      - name: 🚀 Run Job Genie Script
-        env:
-          SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
-          APP_PASSWORD: ${{ secrets.APP_PASSWORD }}
-          RECIPIENT_EMAIL: ${{ secrets.RECIPIENT_EMAIL }}
+      - name: 🔧 Set Up Virtual Environment
         run: |
-          echo "🏁 Running jobgenie.py..."
-          
-          echo "🐍 Python Path:"
-          which python3  # ✅ Print the Python path
-
-          echo "🔍 Checking if jobspy is installed..."
-          python3 -m pip show jobspy || echo "⚠️ JobSpy not found by pip!"
-          python3 -m jobspy --help || echo "⚠️ JobSpy import failed"
-
-          echo "🔧 Setting up isolated environment..."
+          echo "🔧 Creating virtual environment..."
           python3 -m venv venv  # ✅ Create a virtual environment
           source venv/bin/activate  # ✅ Activate the virtual environment
 
@@ -60,10 +47,28 @@ jobs:
           python3 -m pip install --upgrade pip
           python3 -m pip install jobspy pandas -r requirements.txt
 
-          echo "🔍 Verifying jobspy installation inside venv..."
-          python3 -m pip show jobspy || echo "⚠️ JobSpy STILL not found inside venv!"
+      - name: 🔄 Reinstall jobspy Before Running
+        run: |
+          source venv/bin/activate
+          python3 -m pip install --force-reinstall jobspy
 
-          echo "✅ Running jobgenie.py inside the virtual environment..."
+      - name: 🚀 Run Job Genie Script
+        env:
+          SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
+          APP_PASSWORD: ${{ secrets.APP_PASSWORD }}
+          RECIPIENT_EMAIL: ${{ secrets.RECIPIENT_EMAIL }}
+        run: |
+          echo "🔧 Activating virtual environment..."
+          source venv/bin/activate  # ✅ Ensure the script runs in the venv
+
+          echo "🔍 Checking Python version inside venv..."
+          which python3  # ✅ Ensure correct Python is being used
+          python3 --version
+
+          echo "🔍 Checking installed packages inside venv..."
+          python3 -m pip list | grep jobspy || echo "⚠️ jobspy NOT installed!"
+
+          echo "✅ Running jobgenie.py..."
           python3 jobgenie.py || echo "⚠️ Script failed, capturing logs..."
 
       - name: 📤 Upload Logs if Script Fails
