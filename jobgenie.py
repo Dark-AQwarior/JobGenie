@@ -1,4 +1,3 @@
-!pip install jobspy
 import sys
 import os
 
