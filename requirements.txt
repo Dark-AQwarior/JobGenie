@@ -1,0 +1,8 @@
+jobspy
+pandas
+smtplib
+email
+logging
+selenium
+webdriver-manager
+undetected-chromedriver

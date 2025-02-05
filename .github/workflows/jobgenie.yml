@@ -1,9 +1,9 @@
-name: 🚀 Job Genie Automation
+name: 🚀 JobGenie Automation
 
 on:
   schedule:
     - cron: "0 0 * * *"  # Runs every day at midnight UTC
-  workflow_dispatch:  # Allows manual trigger if needed
+  workflow_dispatch:
 
 jobs:
   run-script:
@@ -24,7 +24,7 @@ jobs:
             pip install --upgrade pip
             pip install -r requirements.txt
           else
-            echo "⚠️ No requirements.txt found, skipping dependency installation."
+            echo "⚠️ No requirements.txt found, skipping installation."
           fi
 
       - name: 🚀 Run Job Genie Script
@@ -33,7 +33,7 @@ jobs:
           APP_PASSWORD: ${{ secrets.APP_PASSWORD }}
           RECIPIENT_EMAIL: ${{ secrets.RECIPIENT_EMAIL }}
         run: |
-          echo "🏁 Starting jobgenie.py..."
+          echo "🏁 Running jobgenie.py..."
           python jobgenie.py 2>&1 | tee jobgenie_log.txt
           echo "✅ Job completed successfully!"
 
@@ -43,8 +43,3 @@ jobs:
         with:
           name: jobgenie_logs
           path: jobgenie_log.txt
-
-      - name: 🚨 Notify on Failure
-        if: failure()
-        run: |
-          echo "❌ Job Genie failed! Check logs in Actions."
