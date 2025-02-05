@@ -1,6 +1,5 @@
 jobspy
 pandas
-email
 logging
 selenium
 webdriver-manager
