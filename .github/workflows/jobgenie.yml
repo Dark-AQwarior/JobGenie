@@ -1,0 +1,51 @@
+name: 🚀 Job Genie Automation
+
+on:
+  schedule:
+    - cron: "0 0 * * *"  # Runs every day at midnight UTC
+  workflow_dispatch:  # Allows manual trigger if needed
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: 🐍 Set Up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+
+      - name: 📦 Install Dependencies
+        run: |
+          if [ -f requirements.txt ]; then
+            pip install --upgrade pip
+            pip install -r requirements.txt
+          else
+            echo "⚠️ No requirements.txt found, skipping dependency installation."
+          fi
+
+      - name: 🚀 Run Job Genie Script
+        env:
+          SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
+          APP_PASSWORD: ${{ secrets.APP_PASSWORD }}
+          RECIPIENT_EMAIL: ${{ secrets.RECIPIENT_EMAIL }}
+        run: |
+          echo "🏁 Starting jobgenie.py..."
+          python jobgenie.py 2>&1 | tee jobgenie_log.txt
+          echo "✅ Job completed successfully!"
+
+      - name: 📤 Upload Logs on Failure
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: jobgenie_logs
+          path: jobgenie_log.txt
+
+      - name: 🚨 Notify on Failure
+        if: failure()
+        run: |
+          echo "❌ Job Genie failed! Check logs in Actions."
+
