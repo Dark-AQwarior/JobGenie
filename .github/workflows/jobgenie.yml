@@ -44,19 +44,27 @@ jobs:
           RECIPIENT_EMAIL: ${{ secrets.RECIPIENT_EMAIL }}
         run: |
           echo "🏁 Running jobgenie.py..."
+          
           echo "🐍 Python Path:"
           which python3  # ✅ Print the Python path
-          
+
           echo "🔍 Checking if jobspy is installed..."
-          python3 -m pip show jobspy  # ✅ Ensure jobspy is detected
+          python3 -m pip show jobspy || echo "⚠️ JobSpy not found by pip!"
           python3 -m jobspy --help || echo "⚠️ JobSpy import failed"
 
-          echo "🔧 Forcing correct Python environment..."
-          export PYTHONPATH=$(python3 -c "import site; print(site.getsitepackages()[0])")
-          echo "PYTHONPATH is set to: $PYTHONPATH"
+          echo "🔧 Setting up isolated environment..."
+          python3 -m venv venv  # ✅ Create a virtual environment
+          source venv/bin/activate  # ✅ Activate the virtual environment
 
-          echo "✅ Running jobgenie.py with correct environment..."
-          PYTHONPATH=$PYTHONPATH python3 jobgenie.py || echo "⚠️ Script failed, capturing logs..."
+          echo "📦 Installing dependencies inside the venv..."
+          python3 -m pip install --upgrade pip
+          python3 -m pip install jobspy pandas -r requirements.txt
+
+          echo "🔍 Verifying jobspy installation inside venv..."
+          python3 -m pip show jobspy || echo "⚠️ JobSpy STILL not found inside venv!"
+
+          echo "✅ Running jobgenie.py inside the virtual environment..."
+          python3 jobgenie.py || echo "⚠️ Script failed, capturing logs..."
 
       - name: 📤 Upload Logs if Script Fails
         if: always()
