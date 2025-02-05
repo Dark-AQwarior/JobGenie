@@ -8,18 +8,24 @@ import traceback
 from jobspy import scrape_jobs
 from email.message import EmailMessage
 
-# ✅ Setup Logging (Logs both to console & file)
+# ✅ Define Log File and Ensure It's Created
 LOG_FILE = "jobgenie_log.txt"
+
+# ✅ Create log file immediately to prevent "file not found" error
+with open(LOG_FILE, "w") as lf:
+    lf.write("🚀 JobGenie started...\n")
+
+# ✅ Setup Logging to File and Console
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s",
     handlers=[
-        logging.FileHandler(LOG_FILE, mode='w'),  # Save logs to file
+        logging.FileHandler(LOG_FILE, mode='a'),  # Append to log file
         logging.StreamHandler()  # Print logs to console
     ],
 )
 
-logging.info("🚀 JobGenie script started.")
+logging.info("🚀 JobGenie script initialized.")
 
 # ✅ Load Email Credentials from GitHub Secrets
 SENDER_EMAIL = os.getenv("SENDER_EMAIL")

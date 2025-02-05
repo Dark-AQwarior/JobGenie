@@ -34,6 +34,7 @@ jobs:
           RECIPIENT_EMAIL: ${{ secrets.RECIPIENT_EMAIL }}
         run: |
           echo "🏁 Running jobgenie.py..."
+          touch jobgenie_log.txt  # ✅ Ensure log file exists before execution
           python jobgenie.py || echo "⚠️ Script failed, capturing logs..."
           echo "✅ Job completed successfully!"
 
