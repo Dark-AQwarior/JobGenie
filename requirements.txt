@@ -1,6 +1,5 @@
 jobspy
 pandas
-smtplib
 email
 logging
 selenium
