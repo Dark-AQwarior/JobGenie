@@ -8,10 +8,20 @@ import traceback
 from jobspy import scrape_jobs
 from email.message import EmailMessage
 
-# ✅ Configure logging
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s", force=True)
+# ✅ Setup Logging (Logs both to console & file)
+LOG_FILE = "jobgenie_log.txt"
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    handlers=[
+        logging.FileHandler(LOG_FILE, mode='w'),  # Save logs to file
+        logging.StreamHandler()  # Print logs to console
+    ],
+)
 
-# ✅ Load Email Credentials from Environment Variables
+logging.info("🚀 JobGenie script started.")
+
+# ✅ Load Email Credentials from GitHub Secrets
 SENDER_EMAIL = os.getenv("SENDER_EMAIL")
 APP_PASSWORD = os.getenv("APP_PASSWORD")
 RECIPIENT_EMAIL = os.getenv("RECIPIENT_EMAIL")
@@ -95,7 +105,7 @@ for role in job_roles:
 
 # ✅ Save jobs to CSV
 final_csv_filename = "JobGenieMagic.csv"
-if not all_jobs_df.empty:
+if not all_jobs_df.empty():
     all_jobs_df.drop_duplicates(subset=["job_url" if "job_url" in all_jobs_df.columns else "title"], keep="first", inplace=True)
     all_jobs_df.to_csv(final_csv_filename, quoting=csv.QUOTE_NONNUMERIC, escapechar="\\", index=False)
     logging.info(f"✅ Jobs saved in {final_csv_filename}")
