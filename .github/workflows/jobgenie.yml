@@ -18,14 +18,16 @@ jobs:
         with:
           python-version: "3.9"
 
-      - name: 📦 Install Dependencies
+      - name: 📦 Install Dependencies (Ensure jobspy is Installed)
         run: |
+          pip install --upgrade pip
+          pip install jobspy pandas logging  # ✅ Explicitly install jobspy
           if [ -f requirements.txt ]; then
-            pip install --upgrade pip
             pip install -r requirements.txt
           else
             echo "⚠️ No requirements.txt found, skipping installation."
           fi
+          pip list  # ✅ Print installed packages for debugging
 
       - name: 🚀 Run Job Genie Script
         env:
@@ -34,7 +36,6 @@ jobs:
           RECIPIENT_EMAIL: ${{ secrets.RECIPIENT_EMAIL }}
         run: |
           echo "🏁 Running jobgenie.py..."
-          touch jobgenie_log.txt  # ✅ Ensure log file exists before execution
           python jobgenie.py || echo "⚠️ Script failed, capturing logs..."
           echo "✅ Job completed successfully!"
 
