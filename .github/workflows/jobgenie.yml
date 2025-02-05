@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: 📥 Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: 🐍 Set Up Python
         uses: actions/setup-python@v4
@@ -39,7 +39,7 @@ jobs:
 
       - name: 📤 Upload Logs on Failure
         if: failure()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: jobgenie_logs
           path: jobgenie_log.txt
@@ -48,4 +48,3 @@ jobs:
         if: failure()
         run: |
           echo "❌ Job Genie failed! Check logs in Actions."
-
