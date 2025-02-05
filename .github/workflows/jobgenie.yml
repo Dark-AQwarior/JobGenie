@@ -46,11 +46,17 @@ jobs:
           echo "🏁 Running jobgenie.py..."
           echo "🐍 Python Path:"
           which python3  # ✅ Print the Python path
+          
           echo "🔍 Checking if jobspy is installed..."
           python3 -m pip show jobspy  # ✅ Ensure jobspy is detected
           python3 -m jobspy --help || echo "⚠️ JobSpy import failed"
-          python3 jobgenie.py || echo "⚠️ Script failed, capturing logs..."
-          echo "✅ Job completed successfully!"
+
+          echo "🔧 Forcing correct Python environment..."
+          export PYTHONPATH=$(python3 -c "import site; print(site.getsitepackages()[0])")
+          echo "PYTHONPATH is set to: $PYTHONPATH"
+
+          echo "✅ Running jobgenie.py with correct environment..."
+          PYTHONPATH=$PYTHONPATH python3 jobgenie.py || echo "⚠️ Script failed, capturing logs..."
 
       - name: 📤 Upload Logs if Script Fails
         if: always()

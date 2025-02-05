@@ -1,5 +1,27 @@
-# -*- coding: utf-8 -*-
+import sys
 import os
+
+# Debugging: Print Python Path
+print(f"🐍 Python Executable Path: {sys.executable}")
+print(f"📜 Python Version: {sys.version}")
+
+# Ensure the correct Python environment is used
+sys.path.append(os.path.dirname(sys.executable))
+
+# Debugging: Print sys.path to check module search paths
+print("🔍 Python sys.path:")
+print("\n".join(sys.path))
+
+# Try importing jobspy and print an error if it fails
+try:
+    from jobspy import scrape_jobs
+    print("✅ jobspy imported successfully!")
+except ModuleNotFoundError:
+    print("❌ jobspy module NOT found! Printing sys.path:")
+    print("\n".join(sys.path))
+    raise
+
+# -*- coding: utf-8 -*-
 import csv
 import smtplib
 import logging
