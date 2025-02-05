@@ -23,7 +23,7 @@ import os
 # Set your credentials (Replace with your actual credentials)
 os.environ["SENDER_EMAIL"] = "agrapavi@gmail.com"  # Replace with your sender email
 os.environ["APP_PASSWORD"] = "yjwy gvof vbeh ughe"  # Replace with your generated Gmail App Password
-os.environ["RECIPIENT_EMAIL"] = "agrapavi@gmail.com"  # Replace with the recipient email
+os.environ["RECIPIENT_EMAIL"] = "bhargavnandan89@gmail.com"  # Replace with the recipient email
 
 print("✅ Environment variables set successfully!")
 
